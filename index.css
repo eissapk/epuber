@@ -1,0 +1,15 @@
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+iframe {
+  width: calc(100vw - 25px);
+  margin: 0 auto;
+  height: 100vh;
+  border: 0;
+}
