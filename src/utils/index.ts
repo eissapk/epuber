@@ -1,79 +1,33 @@
-const loadEpub = async (res: any, containerPath: any) => {
+const loadEpub = async ({ res, filesPaths, ncxPath, opfPath }: { res: any; filesPaths: string[]; ncxPath: string; opfPath: string }) => {
   try {
-    const fileContent = (await getFileContent(
-      res.files[containerPath]
-    )) as string;
-    console.log(res);
-    console.log(containerPath);
-    // console.log(fileContent);
+    // OPF
+    const opfContent = (await getFileContent(res.files[opfPath])) as string;
+    // console.log("opf content:\n", opfContent);
+    const packageElement = (await getElement(opfContent, "package")) as Element;
+    const version = packageElement.getAttribute("version");
+    const coverPath = getBookCover(res, packageElement, filesPaths);
 
-    const rootfile = await getElement(fileContent, "rootfile");
-    // console.log(rootfile);
-
-    // @ts-expect-error -- handle it later
-    const fullPath = rootfile.getAttribute("full-path");
-    if (!fullPath) return console.error("full-path of rootfile doesn't exist!");
-    console.log("content.opf path:", fullPath);
-
-    const contentOpf = await getFileContent(res.files[fullPath]);
-    // console.log(contentOpf);
-    // @ts-expect-error -- handle it later
-    const epubVersion = await getEpubVersion(contentOpf);
-    console.log("epub version:", epubVersion);
-
-    // @ts-expect-error -- handle it later
-    const item = await getElement(contentOpf, "#ncx");
-    // console.log(item);
-
-    // @ts-expect-error -- handle it later
-    const ncx = item.getAttribute("href");
-    if (!ncx) return console.error("href of ncx doesn't exist!");
-
-    let ncxPath = getNcxPath(ncx, fullPath);
-
-    // fallback to get absolute path of ncx file -- for other epub providers | it may have errors in the future
-    const keys = Object.keys(res.files);
-    if (!keys.includes(ncxPath)) {
-      ncxPath = fullPath.split("/")[0] + "/" + ncxPath;
-    }
-
-    console.log("ncx path:", ncxPath);
-
+    // NCX
     const ncxContent = (await getFileContent(res.files[ncxPath])) as string;
-
     const bookTitle = await getBookTitle(ncxContent);
-    console.log({ bookTitle });
-    console.log(ncxContent);
+    // console.log("ncx content:\n", ncxContent);
 
+    // TOC
     let nav = null;
     try {
       nav = await getElement(ncxContent, "nav");
     } catch (err) {
       const navMap = (await getElement(ncxContent, "navMap")) as Element;
-      console.log(navMap);
-
+      // console.log(navMap);
       nav = convertToNav(navMap);
     }
-
     console.log(nav);
 
-    // const toc = await getElm(content2, 'item[properties="nav"]');
-    // let tocPath = toc.getAttribute("href");
-    // if (!tocPath) return;
+    const data = { version, coverPath, bookTitle, ncxPath, opfPath, filesPaths, res, toc: nav.innerHTML };
+    // console.log({ncxContent, opfContent});
+    console.log(data);
 
-    // const arr2 = tocPath.split("/");
-    // arr2.pop(); // remove file name and keep the reset of path
-    // tocPath = arr.join("/") + "/" + tocPath;
-    // tocPath = tocPath.replace(/\/\//g, "/");
-    // console.warn("toc file:", tocPath);
-
-    // const toc_ = await readFile(res.files[tocPath]);
-    // const nav = await getElm(toc_, "nav#toc");
-
-    // console.warn(nav);
-    // handleTocLinks(nav, tocPath);
-    // tableOfContent.innerHTML = nav.outerHTML;
-    // loadChapters(tableOfContent);
+    return data;
   } catch (error) {
     console.error(error);
   }
@@ -94,32 +48,6 @@ function getElement(text: string, selector: string) {
   });
 }
 
-const getNcxPath = (ncx: string, fullPath: string) => {
-  // console.log("ncx:", ncx);
-  // console.log("fullPath:", fullPath);
-  let ncxPath = "";
-
-  // outside the directory of content.opf
-  if (/\//.test(ncx)) {
-    // @ts-check -- handle the path of ncx if outside the directory of content.opf | I assume it is absolute path here
-    ncxPath = ncx;
-  } else {
-    // inside the directory of content.opf
-    ncxPath = fullPath.split("/").slice(0, -1).join("/") + "/" + ncx;
-  }
-  // console.log("ncxPath:", ncxPath);
-  return ncxPath;
-};
-
-const getEpubVersion = async (text: string) => {
-  const packageElm = (await getElement(text, "package")) as Element;
-  if (!packageElm) return "2";
-  const version = packageElm.getAttribute("version");
-  if (!version) return "2";
-  return version.split(".")[0];
-};
-
-// todo handle title of other epub providers
 const getBookTitle = async (text: string) => {
   let title = null;
   try {
@@ -140,26 +68,50 @@ const convertToNav = (navMap: Element) => {
     const navContent = navPoint.querySelector("content");
     if (navLabel && navContent) {
       const a = document.createElement("a");
+      const li = document.createElement("li");
       // @ts-expect-error -- handle it in the future
       a.href = navContent.getAttribute("src");
       a.textContent = navLabel.textContent;
-      navPoint.prepend(a);
+      li.append(a);
+      navPoint.prepend(li);
       navLabel.remove();
       navContent.remove();
     }
   });
 
-  // todo fix this part -- it should be clean html 5
-  const olAsString = navMap.outerHTML.toString();
-  olAsString.replace(/xmlns="[^"]*"/gi, "");
-  olAsString.replace(/navPoint/gi, "li");
-  console.log(olAsString);
+  // todo fix this part -- it should be clean html 5 | li is the issue it should be inside a tag
+  let markup = navMap.innerHTML;
+  markup = markup.replace(/playOrder="[^"]*"/gi, "").replace(/xmlns="[^"]*"/gi, "");
+  markup = markup.replace(/navPoint/gi, "ul");
+  // console.log(markup);
 
-  //   nav.insertAdjacentHTML("afterbegin", olAsString);
-  //   console.log(nav.outerHTML);
+  nav.innerHTML = markup;
 
-  //   return nav;
-  return "";
+  return nav;
+};
+const getBookCover = (res: any, pkg: Element, keys: string[]) => {
+  let coverPath = null;
+  try {
+    const cover = pkg.querySelector("meta[name='cover']");
+    if (!cover) console.log("cover doesn't exist!");
+
+    const coverId = cover!.getAttribute("content");
+    if (!coverId) console.log("coverId doesn't exist!");
+
+    const imgItem = pkg.querySelector("#" + coverId);
+    if (!imgItem) console.log("imgItem doesn't exist!");
+
+    coverPath = imgItem!.getAttribute("href");
+  } catch (err) {}
+  return keys.find((key) => new RegExp(`${coverPath}`, "i").test(key));
 };
 
-export { loadEpub };
+const parseChapter = async ({ href, filesPaths, fileObject }: { href: string; filesPaths: string[]; fileObject: any }) => {
+  const hrefArr = href.split("#");
+  const cleanHref = hrefArr[0];
+  const chapterPath = filesPaths.find((file) => new RegExp(`${cleanHref}`, "i").test(file));
+  // console.log({ href, cleanHref, chapterPath });
+  const chapterContent = await fileObject.files[chapterPath].async("string");
+  return { chapterContent, id: hrefArr[1] };
+};
+export { loadEpub, parseChapter, getElement };
