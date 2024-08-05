@@ -25,7 +25,7 @@ const loadEpub = async ({ res, filesPaths, ncxPath, opfPath }: { res: any; files
 
     const data = { version, coverPath, bookTitle, ncxPath, opfPath, filesPaths, res, toc: nav.innerHTML };
     // console.log({ncxContent, opfContent});
-    console.log(data);
+    // console.log(data);
 
     return data;
   } catch (error) {
@@ -106,6 +106,14 @@ const getBookCover = (res: any, pkg: Element, keys: string[]) => {
   return keys.find((key) => new RegExp(`${coverPath}`, "i").test(key));
 };
 
+const imgToBase64 = async (res: any, coverPath: string) => {
+  const mime = { jpeg: "image/jpeg", jpg: "image/jpeg", png: "image/png" };
+  const ext = coverPath.split(".").slice(-1).join("");
+  const base64 = await res.files[coverPath].async("base64");
+  // @ts-expect-error -- handle it in the future
+  return `data:${mime[ext]};base64,${base64}`;
+};
+
 const parseChapter = async ({ href, filesPaths, fileObject }: { href: string; filesPaths: string[]; fileObject: any }) => {
   const hrefArr = href.split("#");
   const cleanHref = hrefArr[0];
@@ -114,4 +122,4 @@ const parseChapter = async ({ href, filesPaths, fileObject }: { href: string; fi
   const chapterContent = await fileObject.files[chapterPath].async("string");
   return { chapterContent, id: hrefArr[1] };
 };
-export { loadEpub, parseChapter, getElement };
+export { loadEpub, parseChapter, getElement, imgToBase64 };
