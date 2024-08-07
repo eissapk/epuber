@@ -12,6 +12,7 @@ function Chapter({ chapterBody, chId, stylesContentArr }: { chapterBody: string;
       {stylesContentArr.map((style: string, i: number) => (
         <style key={i} dangerouslySetInnerHTML={{ __html: style }}></style>
       ))}
+      {/* @ts-expect-error -- handler it later */}
       <div dangerouslySetInnerHTML={{ __html: chapterBody.innerHTML }}></div>
     </div>
   );

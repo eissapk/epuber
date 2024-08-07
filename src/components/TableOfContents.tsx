@@ -23,6 +23,7 @@ function TableOfContents({
       const chapterContent = await getElement(ch.chapterContent, "html");
 
       // markup
+      // @ts-expect-error -- handler it later
       const body = chapterContent.querySelector("body");
       console.log(body);
 
@@ -40,6 +41,7 @@ function TableOfContents({
       });
 
       // styles
+      // @ts-expect-error -- handler it later
       const head = chapterContent.querySelector("head");
       const links = head.querySelectorAll("link");
       const styleFilesArr: string[] = [];

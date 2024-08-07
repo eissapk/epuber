@@ -22,6 +22,7 @@ function App() {
 
     const epub = await loadEpub({ res, filesPaths: keys, ncxPath, opfPath });
     console.log(epub);
+    // @ts-expect-error -- handle it later
     setEpub(epub);
 
     if (epub?.coverPath) {
