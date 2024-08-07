@@ -1,11 +1,14 @@
+import "./Input.css";
 function Input({
   zip,
   label = "Import Epub",
   onReadFile,
+  onSelect,
 }: {
   zip: any;
   label: string;
   onReadFile: ({ res, keys, opfPath, ncxPath }: { res: any; keys: string[]; opfPath: string; ncxPath: string }) => void;
+  onSelect: (arg: boolean) => void;
 }) {
   const onChangeHandler = async (e: any) => {
     const file = e.target.files[0];
@@ -27,15 +30,15 @@ function Input({
 
       //   console.log({ res, keys, ncxPath, opfPath });
       onReadFile({ res, keys, opfPath, ncxPath });
+      onSelect(true);
     } catch (err) {
       alert("the imported file seems to be corrupted!");
     }
   };
 
   return (
-    <div>
+    <div className="importFile">
       <label>{label}</label>
-      <br />
       <input type="file" onChange={onChangeHandler} />
     </div>
   );

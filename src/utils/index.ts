@@ -118,7 +118,7 @@ const parseChapter = async ({ href, filesPaths, fileObject }: { href: string; fi
   const hrefArr = href.split("#");
   const cleanHref = hrefArr[0];
   const chapterPath = filesPaths.find((file) => new RegExp(`${cleanHref}`, "i").test(file));
-  // console.log({ href, cleanHref, chapterPath });
+  console.log({ href, cleanHref, chapterPath });
   const chapterContent = await fileObject.files[chapterPath].async("string");
   return { chapterContent, id: hrefArr[1] };
 };

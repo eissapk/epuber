@@ -1,3 +1,5 @@
+// todo: double check for each chapter content beside images and styles for all ebook providers including ...
+
 import "./App.css";
 import JSZip from "jszip";
 import { loadEpub, imgToBase64 } from "./utils";
@@ -13,6 +15,7 @@ function App() {
   const [chId, setChId] = useState("");
   const [chapterBody, setChapterBody] = useState<any>("");
   const [stylesContentArr, setStylesContentArr] = useState<string[]>([]);
+  const [isFileSelected, setIsFileSelected] = useState(false);
 
   const readFile = async ({ res, keys, opfPath, ncxPath }: { res: any; keys: string[]; opfPath: string; ncxPath: string }) => {
     // console.log({ res, keys, ncxPath, opfPath });
@@ -36,11 +39,13 @@ function App() {
 
   return (
     <main>
-      <Input zip={zip} onReadFile={readFile} label="Import Epub File" />
-      <hr />
-      <TableOfContents coverPath={coverPath} epub={epub} onChapterLoaded={chapterLoaded} />
-      <hr />
-      <Chapter chapterBody={chapterBody} chId={chId} stylesContentArr={stylesContentArr} />
+      {!isFileSelected && <Input zip={zip} onReadFile={readFile} label="Import Epub File" onSelect={setIsFileSelected} />}
+      {isFileSelected && (
+        <>
+          <TableOfContents coverPath={coverPath} epub={epub} onChapterLoaded={chapterLoaded} />
+          <Chapter chapterBody={chapterBody} chId={chId} stylesContentArr={stylesContentArr} />
+        </>
+      )}
     </main>
   );
 }

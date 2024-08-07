@@ -49,17 +49,22 @@
 	font-style: normal;
 }
 
-:root {
+:root{
+
 }
+#root {
+	display: flex;
+    justify-content: center;
+}
+
+#root >main {
+	align-content: center;
+}
+
 
 #root,
 body {
-	@apply bg-white font-main text-main min-h-[100vh];
+	@apply m-0 bg-white font-main text-main min-h-[100vh];
+	margin: 0;
+	min-height: 100vh;
 }
-/* a:hover{
-    @apply underline;
-} */
-
-[data-remove-styles] * {
-	all: initial;
-  }

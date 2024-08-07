@@ -1,3 +1,4 @@
+import "./Chapter.css";
 import { useEffect } from "react";
 
 function Chapter({ chapterBody, chId, stylesContentArr }: { chapterBody: string; chId: string; stylesContentArr: string[] }) {
@@ -7,7 +8,7 @@ function Chapter({ chapterBody, chId, stylesContentArr }: { chapterBody: string;
     }
   });
   return (
-    <div className="">
+    <div className="chapter">
       {stylesContentArr.map((style: string, i: number) => (
         <style key={i} dangerouslySetInnerHTML={{ __html: style }}></style>
       ))}

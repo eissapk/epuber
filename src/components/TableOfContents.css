@@ -1,0 +1,35 @@
+.toc {
+    box-sizing: border-box;
+    padding: 20px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 50%;
+    height: 100vh;
+    background-color: white;
+    overflow-y: auto;
+    transition: all 0.3s ease-in-out;
+}
+.toc article {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.toc article img {
+    width: 250px;
+    height: 325px;
+    object-fit: cover;
+    object-position: top;
+}
+.opened {
+    left: 0;
+}
+.closed {
+    left: calc(-50% + 50px);
+}
+.toggleBtn {
+    width: 50px;
+    position: absolute;
+    top: 0;
+    right:0; 
+}
