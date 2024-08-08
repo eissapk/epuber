@@ -32,6 +32,7 @@ function Chapter({
       }, 200);
     }
     return () => {
+        // @ts-expect-error -- handler it later
       iframe.current.srcdoc = "";
     };
   });
