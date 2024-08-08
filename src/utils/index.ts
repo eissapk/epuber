@@ -9,6 +9,9 @@ const loadEpub = async ({ res, filesPaths, ncxPath, opfPath }: { res: any; files
 
     // NCX
     const ncxContent = (await getFileContent(res.files[ncxPath])) as string;
+    const bookId = createBookId(ncxContent);
+    console.log({ bookId });
+
     const bookTitle = await getBookTitle(ncxContent);
     // console.log("ncx content:\n", ncxContent);
 
@@ -24,7 +27,7 @@ const loadEpub = async ({ res, filesPaths, ncxPath, opfPath }: { res: any; files
     console.log(nav);
 
     // @ts-expect-error -- handler it later
-    const data = { version, coverPath, bookTitle, ncxPath, opfPath, filesPaths, res, toc: nav.innerHTML };
+    const data = { bookId, version, coverPath, bookTitle, ncxPath, opfPath, filesPaths, res, toc: nav.innerHTML };
     // console.log({ncxContent, opfContent});
     // console.log(data);
 
@@ -127,4 +130,26 @@ const parseChapter = async ({ href, filesPaths, fileObject }: { href: string; fi
   const chapterContent = await fileObject.files[chapterPath].async("string");
   return { chapterContent, id: hrefArr[1] };
 };
+
+function stringToHash(string: string) {
+  let hash = 0;
+
+  if (string.length == 0) return hash;
+
+  for (let i = 0; i < string.length; i++) {
+    const char = string.charCodeAt(i);
+    hash = (hash << 5) - hash + char;
+    hash = hash & hash;
+  }
+
+  return hash;
+}
+const createBookId = (ncxContent: string) => {
+  // const createBookId = (res: any) => {
+  // const temp1 = res.files["OEBPS/toc.ncx"]._data.compressedContent;
+  // const str = String.fromCharCode.apply(null, temp1);
+  // return stringToHash(str);
+  return stringToHash(ncxContent);
+};
+
 export { loadEpub, parseChapter, getElement, imgToBase64 };
