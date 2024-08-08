@@ -11,7 +11,7 @@ function TableOfContents({
 }: {
   coverPath: string;
   epub: any;
-  onChapterLoaded: (body: Element, id: string, stylesContentArr: string[]) => void;
+  onChapterLoaded: (chapterBody: Element, chapterBodyClasses: string, id: string, stylesContentArr: string[]) => void;
 }) {
   const [isOpened, setIsOpened] = useState(true);
   // todo: split this function into pieces of Promises
