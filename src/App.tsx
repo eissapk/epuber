@@ -17,6 +17,7 @@ function App() {
   const [chapterBodyClasses, setChapterBodyClasses] = useState<any>("");
   const [stylesContentArr, setStylesContentArr] = useState<string[]>([]);
   const [isFileSelected, setIsFileSelected] = useState(false);
+  const [isLoadingChapter, setIsLoadingChapter] = useState(false);
 
   const readFile = async ({ res, keys, opfPath, ncxPath }: { res: any; keys: string[]; opfPath: string; ncxPath: string }) => {
     // console.log({ res, keys, ncxPath, opfPath });
@@ -37,6 +38,7 @@ function App() {
     setChapterBody(chapterBody);
     setChapterBodyClasses(chapterBodyClasses);
     setStylesContentArr(stylesContentArr);
+    setIsLoadingChapter(false);
     // console.log(id, chapterBody, stylesContentArr);
   }
 
@@ -45,7 +47,9 @@ function App() {
       {!isFileSelected && <Input zip={zip} onReadFile={readFile} label="Import Epub File" onSelect={setIsFileSelected} />}
       {isFileSelected && (
         <>
-          <TableOfContents coverPath={coverPath} epub={epub} onChapterLoaded={chapterLoaded} />
+          <TableOfContents coverPath={coverPath} epub={epub} onChapterLoaded={chapterLoaded} setIsLoadingChapter={setIsLoadingChapter} />
+
+          {isLoadingChapter && <div className="text-center">Loading Chapter...</div>}
           <Chapter chapterBody={chapterBody} chId={chId} stylesContentArr={stylesContentArr} chapterBodyClasses={chapterBodyClasses} />
         </>
       )}

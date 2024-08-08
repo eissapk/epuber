@@ -4,11 +4,12 @@
     position: fixed;
     left: 0;
     top: 0;
-    width: 50%;
+    width: 30%;
     height: 100vh;
     background-color: white;
     overflow-y: auto;
     transition: all 0.3s ease-in-out;
+    z-index: 999;
 }
 .toc article {
     display: flex;
@@ -25,7 +26,7 @@
     left: 0;
 }
 .closed {
-    left: calc(-50% + 50px);
+    left: calc(-30% + 50px);
 }
 .toggleBtn {
     width: 50px;
