@@ -14,6 +14,7 @@ function App() {
   const [coverPath, setCoverPath] = useState("");
   const [chId, setChId] = useState("");
   const [chapterBody, setChapterBody] = useState<any>("");
+  const [chapterBodyClasses, setChapterBodyClasses] = useState<any>("");
   const [stylesContentArr, setStylesContentArr] = useState<string[]>([]);
   const [isFileSelected, setIsFileSelected] = useState(false);
 
@@ -31,9 +32,10 @@ function App() {
     }
   };
 
-  function chapterLoaded(chapterBody: Element, id: string, stylesContentArr: string[]) {
+  function chapterLoaded(chapterBody: Element, chapterBodyClasses: string, id: string, stylesContentArr: string[]) {
     setChId(id);
     setChapterBody(chapterBody);
+    setChapterBodyClasses(chapterBodyClasses);
     setStylesContentArr(stylesContentArr);
     // console.log(id, chapterBody, stylesContentArr);
   }
@@ -44,7 +46,7 @@ function App() {
       {isFileSelected && (
         <>
           <TableOfContents coverPath={coverPath} epub={epub} onChapterLoaded={chapterLoaded} />
-          <Chapter chapterBody={chapterBody} chId={chId} stylesContentArr={stylesContentArr} />
+          <Chapter chapterBody={chapterBody} chId={chId} stylesContentArr={stylesContentArr} chapterBodyClasses={chapterBodyClasses} />
         </>
       )}
     </main>

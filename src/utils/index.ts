@@ -110,7 +110,9 @@ const getBookCover = (res: any, pkg: Element, keys: string[]) => {
 
 const imgToBase64 = async (res: any, coverPath: string) => {
   const mime = { jpeg: "image/jpeg", jpg: "image/jpeg", png: "image/png" };
-  const ext = coverPath.split(".").slice(-1).join("");
+  const ext = coverPath?.split(".").slice(-1).join("");
+  console.log({ ext, coverPath });
+
   const base64 = await res.files[coverPath].async("base64");
   // @ts-expect-error -- handle it in the future
   return `data:${mime[ext]};base64,${base64}`;

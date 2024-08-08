@@ -2,6 +2,8 @@ import "./TableOfContents.css";
 import { getElement, imgToBase64, parseChapter } from "../utils";
 import { useState } from "react";
 
+//todo: vip handle imgs, styles and html into 3 promises, because some images don't get injected as base64 due to a delay
+// and test with winter collection epub
 function TableOfContents({
   coverPath,
   epub,
@@ -16,7 +18,9 @@ function TableOfContents({
   const onClickHandler = async (e: any) => {
     e.preventDefault();
     if (e.target.nodeName == "A") {
-      const href = e.target.getAttribute("href").replace(/\.\.\//, ""); // remove ../
+      const href = e.target.getAttribute("href").replace(/\.\.\//g, ""); // remove ../
+      // console.log(href, 123);
+
       const ch = await parseChapter({ href, filesPaths: epub.filesPaths, fileObject: epub.res });
       // console.log(ch);
 
@@ -25,13 +29,17 @@ function TableOfContents({
       // markup
       // @ts-expect-error -- handler it later
       const body = chapterContent.querySelector("body");
-      console.log(body);
+      const bodyClasses = body.className || "";
+      // console.log(body);
 
       // images
       const imgs = body.querySelectorAll("img");
       imgs.forEach(async (img: any, i: number) => {
-        const imgName = img.getAttribute("src");
+        const imgName = img.getAttribute("src").replace(/\.\.\//g, ""); // remove ../../
+        // console.log(imgName);
+
         const imgPath = epub.filesPaths.find((file: any) => new RegExp(`${imgName}`, "i").test(file));
+        // console.log({ imgName, imgPath });
         const base64 = await imgToBase64(epub.res, imgPath);
         // console.log(base64);
         // console.log(img);
@@ -52,6 +60,7 @@ function TableOfContents({
       });
 
       styleFilesArr.forEach(async (styleFile: string, i: number) => {
+        styleFile = styleFile.replace(/\.\.\//g, ""); // remove ../../
         const styleFilePath = epub.filesPaths.find((file: string) => new RegExp(`${styleFile}`, "i").test(file));
         if (styleFilePath) {
           const css = await epub.res.files[styleFilePath].async("string");
@@ -64,7 +73,8 @@ function TableOfContents({
         done();
       }
       function done() {
-        onChapterLoaded(body, ch.id, stylesContentArr);
+        onChapterLoaded(body, bodyClasses, ch.id, stylesContentArr);
+        setIsOpened(false);
       }
     }
   };
