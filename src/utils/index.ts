@@ -11,7 +11,7 @@ const loadEpub = async ({ res, filesPaths, ncxPath, opfPath }: { res: any; files
     const ncxContent = (await getFileContent(res.files[ncxPath])) as string;
     const bookId = createBookId(ncxContent);
     localStorage.setItem("bookId", String(bookId));
-    console.log({ bookId });
+    // console.log({ bookId });
 
     const bookTitle = await getBookTitle(ncxContent);
     // console.log("ncx content:\n", ncxContent);
@@ -20,12 +20,13 @@ const loadEpub = async ({ res, filesPaths, ncxPath, opfPath }: { res: any; files
     let nav = null;
     try {
       nav = await getElement(ncxContent, "nav");
+      console.log(123, nav);
     } catch (err) {
       const navMap = (await getElement(ncxContent, "navMap")) as Element;
       // console.log(navMap);
       nav = convertToNav(navMap);
     }
-    console.log(nav);
+    // console.log(nav);
 
     // @ts-expect-error -- handler it later
     const data = { bookId, version, coverPath, bookTitle, ncxPath, opfPath, filesPaths, res, toc: nav.innerHTML };
@@ -77,16 +78,29 @@ const convertToNav = (navMap: Element) => {
       // @ts-expect-error -- handle it in the future
       a.href = navContent.getAttribute("src");
       a.textContent = navLabel.textContent;
+      // @ts-expect-error -- handle it in the future
+      a.title = navLabel.textContent;
       li.append(a);
       navPoint.prepend(li);
       navLabel.remove();
       navContent.remove();
+      const innerNavpoint = navPoint.querySelector("navPoint");
+      if (innerNavpoint && innerNavpoint.parentElement) {
+        innerNavpoint.parentElement.classList.add("parent");
+        const caret = document.createElement("span");
+        caret.classList.add("caret");
+        const li = innerNavpoint.parentElement.querySelector("li");
+        if (li) {
+          li.prepend(caret);
+        }
+      }
     }
   });
 
   // todo fix this part -- it should be clean html 5 | li is the issue it should be inside a tag
   let markup = navMap.innerHTML;
-  markup = markup.replace(/playOrder="[^"]*"/gi, "").replace(/xmlns="[^"]*"/gi, "");
+  // markup = markup.replace(/playOrder="[^"]*"/gi, "").replace(/xmlns="[^"]*"/gi, "");
+  markup = markup.replace(/xmlns="[^"]*"/gi, "");
   markup = markup.replace(/navPoint/gi, "ul");
   // console.log(markup);
 
@@ -115,7 +129,7 @@ const getBookCover = (res: any, pkg: Element, keys: string[]) => {
 const imgToBase64 = async (res: any, coverPath: string) => {
   const mime = { jpeg: "image/jpeg", jpg: "image/jpeg", png: "image/png" };
   const ext = coverPath?.split(".").slice(-1).join("");
-  console.log({ ext, coverPath });
+  // console.log({ ext, coverPath });
 
   const base64 = await res.files[coverPath].async("base64");
   // @ts-expect-error -- handle it in the future
@@ -126,7 +140,7 @@ const parseChapter = async ({ href, filesPaths, fileObject }: { href: string; fi
   const hrefArr = href.split("#");
   const cleanHref = hrefArr[0];
   const chapterPath = filesPaths.find((file) => new RegExp(`${cleanHref}`, "i").test(file));
-  console.log({ href, cleanHref, chapterPath });
+  // console.log({ href, cleanHref, chapterPath });
   // @ts-expect-error -- handler it later
   const chapterContent = await fileObject.files[chapterPath].async("string");
   return { chapterContent, id: hrefArr[1] };

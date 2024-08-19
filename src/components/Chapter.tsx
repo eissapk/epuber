@@ -16,7 +16,36 @@ function Chapter({
   useEffect(() => {
     // console.log(iframe, chapterBody, chapterBodyClasses, stylesContentArr, chId);
     if (iframe) {
-      const styles = stylesContentArr.map((style: string) => `<style>${style}</style>`).join("");
+      let styles = stylesContentArr.map((style: string) => `<style>${style}</style>`).join("");
+      styles += `
+      <style>
+      :root{
+  --sb-track-color: transparent;
+  --sb-thumb-color: #e30b5d;
+  --sb-size: 5px;
+      }
+body::-webkit-scrollbar {
+  width: var(--sb-size);
+}
+
+body::-webkit-scrollbar-track {
+  background: var(--sb-track-color);
+  border-radius: 3px;
+}
+
+body::-webkit-scrollbar-thumb {
+  background: var(--sb-thumb-color);
+  border-radius: 3px;
+}
+
+@supports not selector(::-webkit-scrollbar) {
+  body {
+    scrollbar-color: var(--sb-thumb-color) var(--sb-track-color);
+  }
+}
+      </style>
+  `;
+
       // @ts-expect-error -- handler it later
       iframe.current.srcdoc = `<!DOCTYPE html><html><head>${styles}</head><body class="${chapterBodyClasses}"><div style="max-width: 1000px; margin: 0 auto; padding:10px; text-align: left;">${chapterBody.innerHTML}</div></body></html>`;
       if (chapterBody) {

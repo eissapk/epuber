@@ -57,7 +57,7 @@ function TableOfContents({
       if (link.getAttribute("rel") == "stylesheet") styleFilesArr.push(link.getAttribute("href"));
     });
 
-    console.log("styleFilesArr.length:", styleFilesArr.length);
+    // console.log("styleFilesArr.length:", styleFilesArr.length);
 
     styleFilesArr.forEach(async (styleFile: string) => {
       styleFile = styleFile.replace(/\.\.\//g, ""); // remove ../../
@@ -67,7 +67,7 @@ function TableOfContents({
         stylesContentArr.push(css);
       }
       if (styleFilesArr.length == stylesContentArr.length) {
-        console.log("done styles", stylesContentArr);
+        // console.log("done styles", stylesContentArr);
         cb(stylesContentArr);
       }
     });
@@ -78,7 +78,7 @@ function TableOfContents({
     if (e.target.nodeName == "A") {
       setIsLoadingChapter(true);
       const href = e.target.getAttribute("href").replace(/\.\.\//g, ""); // remove ../
-      console.log("href:", href);
+      // console.log("href:", href);
 
       // html
       const { body, bodyClasses, head, id } = await handleHtml(href);
@@ -91,6 +91,18 @@ function TableOfContents({
         });
       });
     }
+    if (e.target.classList.contains("caret")) {
+      const ul = e.target?.parentElement?.parentElement;
+      if (ul && ul.classList.contains("parent")) {
+        if (ul.classList.contains("expand")) {
+          ul.classList.remove("expand");
+          e.target.classList.remove("reverse");
+        } else {
+          ul.classList.add("expand");
+          e.target.classList.add("reverse");
+        }
+      }
+    }
   };
 
   const toggleTOC = () => {
@@ -98,9 +110,9 @@ function TableOfContents({
   };
 
   return (
-    <div className={`toc relative ${isOpened ? "opened" : "closed"}`}>
-      <div className="fixed flex justify-between items-center bg-black py-4 w-[14rem]">
-        <h1 className="font-bold text ps-2">Table of contents</h1>
+    <div className={`toc scroll relative ${isOpened ? "opened" : "closed"}`}>
+      <div className="fixed flex justify-between items-center bg-black py-4 w-[14rem] z-10">
+        <h1 className="font-bold text ps-4">Table of contents</h1>
         <button className="p-1 me-1" type="button" onClick={toggleTOC}>
           {isOpened ? <Toggle className="rotate-180" /> : <Toggle />}
         </button>

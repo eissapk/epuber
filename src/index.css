@@ -4,68 +4,82 @@
 
 /* sohne */
 @font-face {
-	font-family: "sohne";
-	src: url(./assets/fonts/sohne-400-normal.woff) format("woff");
-	font-weight: 400;
-	font-style: normal;
+  font-family: "sohne";
+  src: url(./assets/fonts/sohne-400-normal.woff) format("woff");
+  font-weight: 400;
+  font-style: normal;
 }
 @font-face {
-	font-family: "sohne";
-	src: url(./assets/fonts/sohne-500-normal.woff) format("woff");
-	font-weight: 500;
-	font-style: normal;
+  font-family: "sohne";
+  src: url(./assets/fonts/sohne-500-normal.woff) format("woff");
+  font-weight: 500;
+  font-style: normal;
 }
 @font-face {
-	font-family: "sohne";
-	src: url(./assets/fonts/sohne-700-normal.woff) format("woff");
-	font-weight: 700;
-	font-style: normal;
+  font-family: "sohne";
+  src: url(./assets/fonts/sohne-700-normal.woff) format("woff");
+  font-weight: 700;
+  font-style: normal;
 }
 /* gt-super */
 @font-face {
-	font-family: "gt-super";
-	src: url(./assets/fonts/gt-super-400-normal.woff) format("woff");
-	font-weight: 400;
-	font-style: normal;
+  font-family: "gt-super";
+  src: url(./assets/fonts/gt-super-400-normal.woff) format("woff");
+  font-weight: 400;
+  font-style: normal;
 }
 /* source-code-pro */
 @font-face {
-	font-family: "source-code-pro";
-	src: url(./assets/fonts/source-code-pro-400-normal.woff) format("woff");
-	font-weight: 400;
-	font-style: normal;
+  font-family: "source-code-pro";
+  src: url(./assets/fonts/source-code-pro-400-normal.woff) format("woff");
+  font-weight: 400;
+  font-style: normal;
 }
 /* source-serif-pro */
 @font-face {
-	font-family: "source-code-pro";
-	src: url(./assets/fonts/source-serif-pro-400-normal.woff) format("woff");
-	font-weight: 400;
-	font-style: normal;
+  font-family: "source-code-pro";
+  src: url(./assets/fonts/source-serif-pro-400-normal.woff) format("woff");
+  font-weight: 400;
+  font-style: normal;
 }
 @font-face {
-	font-family: "source-code-pro";
-	src: url(./assets/fonts/source-serif-pro-700-normal.woff) format("woff");
-	font-weight: 700;
-	font-style: normal;
+  font-family: "source-code-pro";
+  src: url(./assets/fonts/source-serif-pro-700-normal.woff) format("woff");
+  font-weight: 700;
+  font-style: normal;
 }
 
-:root{
-
+:root {
+  --sb-track-color: #27272a;
+  --sb-thumb-color: #e30b5d;
+  --sb-size: 5px;
 }
-/* #root {
-	display: flex;
-    justify-content: center;
-}
-
-#root >main {
-	align-content: center;
-} */
-
 
 #root,
 body {
-	@apply bg-black font-main text-main min-h-[100vh];
+  @apply bg-black font-main text-main min-h-[100vh];
 }
 svg {
-	@apply pointer-events-none
+  @apply pointer-events-none;
+}
+
+/* scroll bar */
+.scroll::-webkit-scrollbar {
+  width: var(--sb-size);
+}
+
+.scroll::-webkit-scrollbar-track {
+  background: var(--sb-track-color);
+  border-radius: 3px;
+}
+
+.scroll::-webkit-scrollbar-thumb {
+  background: var(--sb-thumb-color);
+  border-radius: 3px;
+}
+
+@supports not selector(::-webkit-scrollbar) {
+  .scroll {
+    scrollbar-color: var(--sb-thumb-color) var(--sb-track-color);
+  }
 }

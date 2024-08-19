@@ -23,7 +23,7 @@ function App() {
     // console.log({ res, keys, ncxPath, opfPath });
 
     const epub = await loadEpub({ res, filesPaths: keys, ncxPath, opfPath });
-    console.log(epub);
+    // console.log(epub);
     // @ts-expect-error -- handle it later
     setEpub(epub);
 
@@ -43,7 +43,7 @@ function App() {
   }
 
   function openBook() {
-    console.log("open book");
+    // console.log("open book");
     setIsFileLoaded(true);
   }
 

@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ["./src/**/*.{js,jsx,ts,tsx}"],
+  content: ["./src/**/*.{js,jsx,ts,tsx,html,css,scss}"],
   theme: {
     screens: {
       xs: "320px",
@@ -16,6 +16,7 @@ export default {
       },
       colors: {
         main: "#242424",
+        sub: "#27272a",
         red: "#e30b5d",
       },
       fontFamily: {
