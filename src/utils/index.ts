@@ -10,6 +10,7 @@ const loadEpub = async ({ res, filesPaths, ncxPath, opfPath }: { res: any; files
     // NCX
     const ncxContent = (await getFileContent(res.files[ncxPath])) as string;
     const bookId = createBookId(ncxContent);
+    localStorage.setItem("bookId", String(bookId));
     console.log({ bookId });
 
     const bookTitle = await getBookTitle(ncxContent);

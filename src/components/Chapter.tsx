@@ -18,8 +18,11 @@ function Chapter({
     if (iframe) {
       const styles = stylesContentArr.map((style: string) => `<style>${style}</style>`).join("");
       // @ts-expect-error -- handler it later
-      iframe.current.srcdoc = `<!DOCTYPE html><html><head>${styles}</head><body class="${chapterBodyClasses}">${chapterBody.innerHTML}</body></html>`;
-      console.log(412333333);
+      iframe.current.srcdoc = `<!DOCTYPE html><html><head>${styles}</head><body class="${chapterBodyClasses}"><div style="max-width: 1000px; margin: 0 auto; padding:10px; text-align: left;">${chapterBody.innerHTML}</div></body></html>`;
+      if (chapterBody) {
+        // @ts-expect-error -- handler it later
+        iframe.current.removeAttribute("style");
+      }
 
       setTimeout(() => {
         // @ts-expect-error -- handler it later
@@ -32,13 +35,13 @@ function Chapter({
       }, 200);
     }
     return () => {
-        // @ts-expect-error -- handler it later
+      // @ts-expect-error -- handler it later
       iframe.current.srcdoc = "";
     };
   });
   return (
     <div className="chapter">
-      <iframe ref={iframe} srcDoc="<!DOCTYPE html>"></iframe>
+      <iframe ref={iframe} style={{ height: "0px" }} srcDoc="<!DOCTYPE html>"></iframe>
     </div>
   );
 }

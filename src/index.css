@@ -64,5 +64,8 @@
 
 #root,
 body {
-	@apply bg-white font-main text-main min-h-[100vh];
+	@apply bg-black font-main text-main min-h-[100vh];
+}
+svg {
+	@apply pointer-events-none
 }

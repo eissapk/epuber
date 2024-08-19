@@ -4,33 +4,62 @@
     position: fixed;
     left: 0;
     top: 0;
-    width: 30%;
+    width: 15rem;
     height: 100vh;
-    background-color: white;
     overflow-y: auto;
+    background-color: black;
     transition: all 0.3s ease-in-out;
     z-index: 999;
+    color: white;
 }
-.toc article {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-.toc article img {
-    width: 250px;
-    height: 325px;
-    object-fit: cover;
-    object-position: top;
-}
+
+
 .opened {
     left: 0;
 }
 .closed {
-    left: calc(-30% + 50px);
+    left: calc(-15rem + 3.5rem);
 }
 .toggleBtn {
     width: 50px;
     position: absolute;
     top: 0;
     right:0; 
+}
+.toc nav ul  {
+    display: flex;
+    row-gap: 0.5rem;
+    flex-direction: column;
+
+}
+.toc nav ul ul {
+    padding-inline-start: 1rem;
+}
+.toc nav ul ul li{
+    list-style-type: disc;
+    list-style-position: inside;
+}
+.toc nav ul  li{
+    color: #71717a;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 100%;
+    white-space: nowrap;
+
+}
+.toc nav {
+    padding-top: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.5rem;
+}
+.toc nav ul a {
+    color: #71717a;
+    text-overflow: ellipsis;
+    overflow: hidden;
+
+}
+.toc nav ul a:hover {
+    color: white;
+
 }

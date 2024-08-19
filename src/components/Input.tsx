@@ -1,7 +1,7 @@
-import "./Input.css";
+import { File } from "../assets/icons";
 function Input({
   zip,
-  label = "Import Epub",
+  label = "New File",
   onReadFile,
   onSelect,
 }: {
@@ -37,9 +37,24 @@ function Input({
   };
 
   return (
-    <div className="importFile">
-      <label>{label}</label>
-      <input type="file" onChange={onChangeHandler} />
+    <div className="flex h-[100vh]">
+      <div className="flex items-center justify-center flex-col max-w-fit mx-auto">
+        {/* file icon */}
+        <File />
+        {/* title */}
+        <h3 className="text-sm text-white font-semibold mt-2">No files</h3>
+        {/* description */}
+        <p className="text-zinc-100 mt-1">Get started by importing a new epub.</p>
+        {/* cta btn */}
+        <label
+          htmlFor="input"
+          className="max-w-fit pointer-events-auto rounded-md bg-red px-4 py-2 text-[0.8125rem] font-semibold leading-5 text-white hover:bg-[#e30b5de6] mt-6"
+        >
+          <span className="me-2 text-base">+</span>
+          {label}
+          <input id="input" className="hidden" type="file" onChange={onChangeHandler} />
+        </label>
+      </div>
     </div>
   );
 }

@@ -1,22 +1,18 @@
 import "./TableOfContents.css";
 import { getElement, imgToBase64, parseChapter } from "../utils";
 import { useState } from "react";
+import { Toggle } from "../assets/icons";
 
-//todo: vip handle imgs, styles and html into 3 promises, because some images don't get injected as base64 due to a delay
-// and test with winter collection epub
 function TableOfContents({
   setIsLoadingChapter,
-  coverPath,
   epub,
   onChapterLoaded,
 }: {
-  coverPath: string;
   epub: any;
   onChapterLoaded: (chapterBody: Element, chapterBodyClasses: string, id: string, stylesContentArr: string[]) => void;
   setIsLoadingChapter: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const [isOpened, setIsOpened] = useState(true);
-  // todo: split this function into pieces of Promises
 
   const handleHtml = async (href: string) => {
     const ch = await parseChapter({ href, filesPaths: epub.filesPaths, fileObject: epub.res });
@@ -103,17 +99,9 @@ function TableOfContents({
 
   return (
     <div className={`toc ${isOpened ? "opened" : "closed"}`}>
-      <button className="toggleBtn" type="button" onClick={toggleTOC}>
-        {isOpened ? "<" : ">"}
+      <button className="absolute p-3 right-2 top-2" type="button" onClick={toggleTOC}>
+        {isOpened ? <Toggle className="rotate-180" /> : <Toggle />}
       </button>
-      <article>
-        <img src={coverPath || "https://placehold.co/250x325"} alt="Book Cover" />
-        <h1>{epub.bookTitle}</h1>
-        <span>
-          Epub ver<i>({epub.version})</i>
-        </span>
-      </article>
-
       <nav dangerouslySetInnerHTML={{ __html: epub.toc }} onClick={onClickHandler}></nav>
     </div>
   );

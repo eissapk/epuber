@@ -16,6 +16,7 @@ export default {
       },
       colors: {
         main: "#242424",
+        red: "#e30b5d",
       },
       fontFamily: {
         main: ["sohne", "Helvetica Neue", "Helvetica", "Arial", "sans-serif"],
