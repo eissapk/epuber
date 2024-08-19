@@ -1,6 +1,6 @@
 import "./Chapter.css";
 import { useEffect, useRef } from "react";
-
+// todo load 1st chapter automatically
 function Chapter({
   chapterBody,
   chapterBodyClasses,
