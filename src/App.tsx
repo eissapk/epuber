@@ -6,6 +6,7 @@ import Input from "./components/Input";
 import TableOfContents from "./components/TableOfContents";
 import Chapter from "./components/Chapter";
 import BookInfo from "./components/BookInfo";
+import Header from "./components/Header";
 
 function App() {
   const zip = new JSZip();
@@ -18,6 +19,7 @@ function App() {
   const [isFileSelected, setIsFileSelected] = useState(false);
   const [isFileLoaded, setIsFileLoaded] = useState(false);
   const [isLoadingChapter, setIsLoadingChapter] = useState(false);
+  const [isOpened, setIsOpened] = useState(true);
 
   const readFile = async ({ res, keys, opfPath, ncxPath }: { res: any; keys: string[]; opfPath: string; ncxPath: string }) => {
     // console.log({ res, keys, ncxPath, opfPath });
@@ -49,9 +51,10 @@ function App() {
 
   return (
     <main>
+      <Header isOpened={isOpened} isFileLoaded={isFileLoaded} setIsOpened={setIsOpened} />
       {!isFileSelected && <Input zip={zip} onReadFile={readFile} label="Import Epub File" onSelect={setIsFileSelected} />}
       {isFileSelected && !isFileLoaded && <BookInfo epub={epub} coverPath={coverPath} onBookOpen={openBook} />}
-      {isFileLoaded && <TableOfContents epub={epub} onChapterLoaded={chapterLoaded} setIsLoadingChapter={setIsLoadingChapter} />}
+      {isFileLoaded && <TableOfContents isOpened={isOpened} epub={epub} onChapterLoaded={chapterLoaded} setIsLoadingChapter={setIsLoadingChapter} />}
       {isLoadingChapter && <div className="text-center">Loading Chapter...</div>}
       <Chapter chapterBody={chapterBody} chId={chId} stylesContentArr={stylesContentArr} chapterBodyClasses={chapterBodyClasses} />
     </main>

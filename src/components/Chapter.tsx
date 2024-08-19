@@ -67,7 +67,7 @@ body::-webkit-scrollbar-thumb {
       // @ts-expect-error -- handler it later
       iframe.current.srcdoc = "";
     };
-  });
+  }, [chapterBody]);
   return (
     <div className="chapter static">
       <iframe ref={iframe} style={{ height: "0px" }} srcDoc="<!DOCTYPE html>"></iframe>

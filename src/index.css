@@ -83,3 +83,6 @@ svg {
     scrollbar-color: var(--sb-thumb-color) var(--sb-track-color);
   }
 }
+.btn {
+  @apply max-w-fit pointer-events-auto rounded-md bg-red px-4 py-2 text-[0.8125rem] font-semibold leading-5 text-white hover:bg-[#e30b5de6];
+}

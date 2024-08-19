@@ -1,19 +1,17 @@
 import "./TableOfContents.css";
 import { getElement, imgToBase64, parseChapter } from "../utils";
-import { useState } from "react";
-import { Toggle } from "../assets/icons";
 
 function TableOfContents({
   setIsLoadingChapter,
   epub,
   onChapterLoaded,
+  isOpened,
 }: {
   epub: any;
+  isOpened: boolean;
   onChapterLoaded: (chapterBody: Element, chapterBodyClasses: string, id: string, stylesContentArr: string[]) => void;
   setIsLoadingChapter: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-  const [isOpened, setIsOpened] = useState(true);
-
   const handleHtml = async (href: string) => {
     const ch = await parseChapter({ href, filesPaths: epub.filesPaths, fileObject: epub.res });
     // console.log(ch);
@@ -87,7 +85,6 @@ function TableOfContents({
         // images
         await handleImg(body, () => {
           onChapterLoaded(body, bodyClasses, id, stylesArr);
-          setIsOpened(false);
         });
       });
     }
@@ -105,17 +102,10 @@ function TableOfContents({
     }
   };
 
-  const toggleTOC = () => {
-    setIsOpened(!isOpened);
-  };
-
   return (
-    <div className={`toc scroll relative ${isOpened ? "opened" : "closed"}`}>
+    <div className={`toc scroll xrelative ${isOpened ? "opened" : "closed"}`}>
       <div className="fixed flex justify-between items-center bg-black py-4 w-[14rem] z-10">
         <h1 className="font-bold text ps-4">Table of contents</h1>
-        <button className="p-1 me-1" type="button" onClick={toggleTOC}>
-          {isOpened ? <Toggle className="rotate-180" /> : <Toggle />}
-        </button>
       </div>
       <nav className="px-2 pb-4" dangerouslySetInnerHTML={{ __html: epub.toc }} onClick={onClickHandler}></nav>
     </div>
