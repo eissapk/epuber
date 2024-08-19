@@ -40,7 +40,7 @@ function Chapter({
     };
   });
   return (
-    <div className="chapter">
+    <div className="chapter static">
       <iframe ref={iframe} style={{ height: "0px" }} srcDoc="<!DOCTYPE html>"></iframe>
     </div>
   );

@@ -98,11 +98,14 @@ function TableOfContents({
   };
 
   return (
-    <div className={`toc ${isOpened ? "opened" : "closed"}`}>
-      <button className="absolute p-3 right-2 top-2" type="button" onClick={toggleTOC}>
-        {isOpened ? <Toggle className="rotate-180" /> : <Toggle />}
-      </button>
-      <nav dangerouslySetInnerHTML={{ __html: epub.toc }} onClick={onClickHandler}></nav>
+    <div className={`toc relative ${isOpened ? "opened" : "closed"}`}>
+      <div className="fixed flex justify-between items-center bg-black py-4 w-[14rem]">
+        <h1 className="font-bold text ps-2">Table of contents</h1>
+        <button className="p-1 me-1" type="button" onClick={toggleTOC}>
+          {isOpened ? <Toggle className="rotate-180" /> : <Toggle />}
+        </button>
+      </div>
+      <nav className="px-2 pb-4" dangerouslySetInnerHTML={{ __html: epub.toc }} onClick={onClickHandler}></nav>
     </div>
   );
 }

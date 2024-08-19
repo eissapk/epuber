@@ -1,6 +1,5 @@
 .toc {
     box-sizing: border-box;
-    padding: 20px;
     position: fixed;
     left: 0;
     top: 0;
@@ -48,7 +47,7 @@
 
 }
 .toc nav {
-    padding-top: 2.5rem;
+    padding-top: 4rem;
     display: flex;
     flex-direction: column;
     row-gap: 0.5rem;
