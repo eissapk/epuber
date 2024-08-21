@@ -11,10 +11,10 @@ function Header({
 }) {
   return (
     <header className="flex justify-between fixed border-b w-full p-4 text-sm border-sub bg-black z-10">
-      <div>
+      <div className="flex items-center">
         {isFileLoaded && (
           <button className="text-white" type="button" onClick={() => setIsOpened(!isOpened)}>
-            <Toggle className="h-7" />
+            <Toggle className="h-6" />
           </button>
         )}
       </div>

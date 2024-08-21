@@ -4,7 +4,7 @@
   left: 0;
   bottom: 0;
   width: 15rem;
-  height: calc(100vh - 3.75rem);
+  /* height: calc(100vh - 3.75rem); */
   overflow-y: auto;
   background-color: black;
   transition: all 0.3s ease-in-out;

@@ -1,17 +1,35 @@
 import "./TableOfContents.css";
 import { getElement, imgToBase64, parseChapter } from "../utils";
+import { useEffect, useRef } from "react";
 
 function TableOfContents({
+  headerHeight,
   setIsLoadingChapter,
   epub,
   onChapterLoaded,
   isOpened,
 }: {
   epub: any;
+  headerHeight: number;
   isOpened: boolean;
   onChapterLoaded: (chapterBody: Element, chapterBodyClasses: string, id: string, stylesContentArr: string[]) => void;
   setIsLoadingChapter: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
+  const toc = useRef(null);
+
+  const onResize = () => {
+    // @ts-expect-error -- handle it later
+    toc.current.style.height = window.innerHeight - headerHeight + "px";
+  };
+
+  useEffect(() => {
+    // @ts-expect-error -- handle it later
+    toc.current.style.height = window.innerHeight - headerHeight + "px";
+    window.addEventListener("resize", onResize);
+    return () => {
+      window.removeEventListener("resize", onResize);
+    };
+  }, [headerHeight]);
   const handleHtml = async (href: string) => {
     const ch = await parseChapter({ href, filesPaths: epub.filesPaths, fileObject: epub.res });
     // console.log(ch);
@@ -103,7 +121,7 @@ function TableOfContents({
   };
 
   return (
-    <div className={`toc scroll xrelative ${isOpened ? "opened" : "closed"}`}>
+    <div ref={toc} className={`toc scroll ${isOpened ? "opened" : "closed"}`}>
       <div className="fixed flex justify-between items-center bg-black py-4 w-[14rem] z-10">
         <h1 className="font-bold text ps-4">Table of contents</h1>
       </div>

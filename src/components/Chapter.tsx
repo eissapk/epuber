@@ -2,17 +2,23 @@ import "./Chapter.css";
 import { useEffect, useRef } from "react";
 // todo load 1st chapter automatically
 function Chapter({
+  headerHeight,
   chapterBody,
   chapterBodyClasses,
   chId,
   stylesContentArr,
 }: {
+  headerHeight: number;
   chapterBodyClasses: string;
   chapterBody: string;
   chId: string;
   stylesContentArr: string[];
 }) {
   const iframe = useRef(null);
+  const onResize = () => {
+    // @ts-expect-error -- handle it later
+    iframe.current.style.height = window.innerHeight - headerHeight + "px";
+  };
   useEffect(() => {
     // console.log(iframe, chapterBody, chapterBodyClasses, stylesContentArr, chId);
     if (iframe) {
@@ -51,6 +57,9 @@ body::-webkit-scrollbar-thumb {
       if (chapterBody) {
         // @ts-expect-error -- handler it later
         iframe.current.removeAttribute("style");
+        // @ts-expect-error -- handle it later
+        iframe.current.style.height = window.innerHeight - headerHeight + "px";
+        window.addEventListener("resize", onResize);
       }
 
       setTimeout(() => {
@@ -66,8 +75,10 @@ body::-webkit-scrollbar-thumb {
     return () => {
       // @ts-expect-error -- handler it later
       iframe.current.srcdoc = "";
+      window.removeEventListener("resize", onResize);
     };
   }, [chapterBody]);
+
   return (
     <div className="chapter static">
       <iframe ref={iframe} style={{ height: "0px" }} srcDoc="<!DOCTYPE html>"></iframe>

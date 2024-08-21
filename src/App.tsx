@@ -1,7 +1,7 @@
 import "./App.css";
 import JSZip from "jszip";
 import { loadEpub, imgToBase64 } from "./utils";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Input from "./components/Input";
 import TableOfContents from "./components/TableOfContents";
 import Chapter from "./components/Chapter";
@@ -20,6 +20,11 @@ function App() {
   const [isFileLoaded, setIsFileLoaded] = useState(false);
   const [isLoadingChapter, setIsLoadingChapter] = useState(false);
   const [isOpened, setIsOpened] = useState(true);
+  const [headerHeight, setHeaderHeight] = useState(0);
+
+  useEffect(() => {
+    setHeaderHeight(document.querySelector("header")?.offsetHeight || 0);
+  }, []);
 
   const readFile = async ({ res, keys, opfPath, ncxPath }: { res: any; keys: string[]; opfPath: string; ncxPath: string }) => {
     // console.log({ res, keys, ncxPath, opfPath });
@@ -54,9 +59,23 @@ function App() {
       <Header isOpened={isOpened} isFileLoaded={isFileLoaded} setIsOpened={setIsOpened} />
       {!isFileSelected && <Input zip={zip} onReadFile={readFile} label="Import Epub File" onSelect={setIsFileSelected} />}
       {isFileSelected && !isFileLoaded && <BookInfo epub={epub} coverPath={coverPath} onBookOpen={openBook} />}
-      {isFileLoaded && <TableOfContents isOpened={isOpened} epub={epub} onChapterLoaded={chapterLoaded} setIsLoadingChapter={setIsLoadingChapter} />}
+      {isFileLoaded && (
+        <TableOfContents
+          headerHeight={headerHeight}
+          isOpened={isOpened}
+          epub={epub}
+          onChapterLoaded={chapterLoaded}
+          setIsLoadingChapter={setIsLoadingChapter}
+        />
+      )}
       {isLoadingChapter && <div className="text-center">Loading Chapter...</div>}
-      <Chapter chapterBody={chapterBody} chId={chId} stylesContentArr={stylesContentArr} chapterBodyClasses={chapterBodyClasses} />
+      <Chapter
+        headerHeight={headerHeight}
+        chapterBody={chapterBody}
+        chId={chId}
+        stylesContentArr={stylesContentArr}
+        chapterBodyClasses={chapterBodyClasses}
+      />
     </main>
   );
 }
